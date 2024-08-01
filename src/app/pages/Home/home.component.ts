@@ -205,7 +205,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(
         (response) => {
           if (response.statusCode === 200) {
-            this.router.navigate(["/patientAppointment"]);
+            this.router.navigate(["/clientAppointment"]);
           } else {
             this.snackbarService.showCustomSnackBarError(response.message);
           }
