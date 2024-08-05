@@ -21,8 +21,8 @@ export class AuthService {
   // baseURL = "http://139.59.76.214:8081"
   // baseURL = "http://139.59.76.214:8081"
 
-  // baseURL = "https://booking.chillarpayments.com/backend"
-  baseURL = "http://localhost:3003"
+  baseURL = "http://booking.chillarpayments.com:8090";
+  // baseURL = "http://localhost:3003"
 
 
   // 1. Generic API Methods
