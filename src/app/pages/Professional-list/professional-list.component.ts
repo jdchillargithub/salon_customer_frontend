@@ -18,11 +18,13 @@ export class ProfessionalListComponent {
   clinicData: any;
   doc: boolean;
   isClinicOpen: boolean = true;
+  encryptedEntityId: string;
 
   constructor(
     private service: AuthService,
     private snackbarService: SnackbarService,
     private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef
   ) {
     this.router.events.subscribe((event) => {
@@ -36,8 +38,18 @@ export class ProfessionalListComponent {
   }
 
   ngOnInit(): void {
+    this.encryptedEntityId = this.getQueryParam("entity");
+    localStorage.setItem("encryptedEntityId", this.encryptedEntityId);
     this.fetchProfessionalList();
     this.getClinicData();
+  }
+
+  getQueryParam(param: string) {
+    let key: string;
+    this.route.queryParams.subscribe((params) => {
+      key = params[param];
+    });
+    return key;
   }
 
   fetchProfessionalList() {
@@ -45,7 +57,11 @@ export class ProfessionalListComponent {
 
     this.service
       .post(
-        { entityId: businessId, statusCheck: true },
+        {
+          entityId: businessId,
+          encryptedEntityId: this.encryptedEntityId,
+          statusCheck: true,
+        },
         "/api/v1/customer/list-doctors"
       )
       .subscribe((data) => {
@@ -68,7 +84,10 @@ export class ProfessionalListComponent {
     const businessId = localStorage.getItem("businessId");
 
     this.service
-      .post({ entityId: businessId }, "/api/v1/customer/entity-details")
+      .post(
+        { entityId: businessId, encryptedEntityId: this.encryptedEntityId },
+        "/api/v1/customer/entity-details"
+      )
       .subscribe((data) => {
         if (data.statusCode == 200) {
           if (data.data.entityResponse.status === 0) {
@@ -76,6 +95,7 @@ export class ProfessionalListComponent {
           }
           console.log("entityDetails==>", data.data.entityReysponse);
           this.clinicData = data.data.entityResponse;
+          localStorage.setItem("businessId", this.clinicData.entityId);
         } else if (data.statusCode == 400 || data.statusCode == 500) {
           this.snackbarService.showCustomSnackBarError(data.message);
         }
@@ -84,7 +104,7 @@ export class ProfessionalListComponent {
 
   routeClick(DocId: string) {
     const businessId = localStorage.getItem("businessId");
-    console.log("FN call==>", DocId);
+    // console.log("FN call==>", DocId);
     if (this.isClinicOpen === false) {
       Swal.fire({
         text: `${this.clinicData.entityName} is currently not accepting booking. Please check back in a few minutes or contact ${this.clinicData.phone}`,
@@ -93,7 +113,9 @@ export class ProfessionalListComponent {
     } else {
       if (DocId) {
         localStorage.setItem("DoctorId", DocId);
-        this.router.navigate(["/doctor"], { queryParams: { id: DocId,entity:businessId } });
+        this.router.navigate(["/salon"], {
+          queryParams: { id: DocId, entity: businessId },
+        });
       }
     }
   }

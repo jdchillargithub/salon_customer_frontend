@@ -13,7 +13,7 @@ import { PaymentfailedComponent } from "src/app/pages/paymentfailed/paymentfaile
 export const AuthLayoutRoutes: Routes = [
   { path: "home", component: BusinessListComponent },
   { path: "professional", component: ProfessionalListComponent },
-  { path: "doctor", component: HomeComponent },
+  { path: "salon", component: HomeComponent },
   { path: "patientAppointment", component: PatientAppointmentComponent },
   { path: "AppointmentConfirmed", component: AppointmentConfirmedComponent },
   { path: "payment-failed", component: PaymentfailedComponent },

@@ -150,7 +150,7 @@ export class AppointmentConfirmedComponent implements OnInit, OnDestroy {
 
   close() {
     // this.router.navigate(['/home']); // Assuming '/' is the route for the home page
-    this.router.navigate(["/doctor"], {
+    this.router.navigate(["/salon"], {
       queryParams: { id: this.DocId, entity: this.businessId },
     });
   }
